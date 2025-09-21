@@ -20,10 +20,10 @@ const addDoctor = async (req, res) => {
       fees,
       address,
       date,
+      available,
     } = req.body;
     const imageFile = req.file;
 
-    date = date || "09-07-2003";
 
     //checking for all data to add doctor
     if (
@@ -37,7 +37,8 @@ const addDoctor = async (req, res) => {
       !about ||
       !fees ||
       !address ||
-      !date
+      !date ||
+      !available
     ) {
       return res.json({
         success: false,
@@ -65,7 +66,6 @@ const addDoctor = async (req, res) => {
 
     //upload image to cloudinary
 
-    console.log('imageFile.path',imageFile.path)
     const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
       resource_type: "image",
     });
@@ -83,11 +83,9 @@ const addDoctor = async (req, res) => {
       about,
       fees,
       address: JSON.parse(address),
-
+      available,
       date: Date.now(),
     };
-
-    console.log('doctorData',doctorData)
 
     const newDoctor = new doctorModel(doctorData);
     await newDoctor.save();
